@@ -29,6 +29,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import android.graphics.Bitmap;
+import android.app.NotificationManager;
+import android.app.NotificationChannel;
+import android.app.PendingIntent;
+import androidx.core.app.RemoteInput;
+import io.flutter.plugins.firebasemessaging.R;
+import android.content.Context;
+import android.graphics.BitmapFactory;
+import androidx.core.app.NotificationCompat;
 
 public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -43,6 +52,11 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   private static final String BACKGROUND_SETUP_CALLBACK_HANDLE_KEY = "background_setup_callback";
   private static final String BACKGROUND_MESSAGE_CALLBACK_HANDLE_KEY =
       "background_message_callback";
+
+  public static final String NOTIFICATION_REPLY = "NotificationReply";
+  public static final int NOTIFICATION_ID = 200;
+  public static final int REQUEST_CODE_APPROVE = 101;
+  public static final String KEY_INTENT_APPROVE = "keyintentaccept";
 
   // TODO(kroikie): make isIsolateRunning per-instance, not static.
   private static AtomicBoolean isIsolateRunning = new AtomicBoolean(false);
@@ -94,26 +108,63 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     } else {
       // If background isolate is not running yet, put message in queue and it will be handled
       // when the isolate starts.
-      if (!isIsolateRunning.get()) {
-        backgroundMessageQueue.add(remoteMessage);
-      } else {
-        final CountDownLatch latch = new CountDownLatch(1);
-        new Handler(getMainLooper())
-            .post(
-                new Runnable() {
-                  @Override
-                  public void run() {
-                    executeDartCallbackInBackgroundIsolate(
-                        FlutterFirebaseMessagingService.this, remoteMessage, latch);
-                  }
-                });
-        try {
-          latch.await();
-        } catch (InterruptedException ex) {
-          Log.i(TAG, "Exception waiting to execute Dart callback", ex);
-        }
-      }
+      showNotificationWithActions(remoteMessage)
+      
+      // if (!isIsolateRunning.get()) {
+      //   backgroundMessageQueue.add(remoteMessage);
+      // } else {
+      //   final CountDownLatch latch = new CountDownLatch(1);
+      //   new Handler(getMainLooper())
+      //       .post(
+      //           new Runnable() {
+      //             @Override
+      //             public void run() {
+      //               executeDartCallbackInBackgroundIsolate(
+      //                   FlutterFirebaseMessagingService.this, remoteMessage, latch);
+      //             }
+      //           });
+      //   try {
+      //     latch.await();
+      //   } catch (InterruptedException ex) {
+      //     Log.i(TAG, "Exception waiting to execute Dart callback", ex);
+      //   }
+      // }
     }
+  }
+
+  private void showNotificationWithActions(final RemoteMessage remoteMessage){
+    Map<String, String> params = remoteMessage.getData();
+    Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+    PendingIntent approvePendingIntent = PendingIntent.getBroadcast(
+            this,
+            REQUEST_CODE_APPROVE,
+            new Intent(this, NotificationReceiver.class)
+                    .putExtra(KEY_INTENT_APPROVE, REQUEST_CODE_APPROVE),
+            PendingIntent.FLAG_UPDATE_CURRENT
+    );
+    RemoteInput remoteInput = new RemoteInput.Builder(NOTIFICATION_REPLY)
+            .setLabel("Approve Comments")
+            .build();
+    NotificationCompat.Action action =
+            new NotificationCompat.Action.Builder(R.drawable.ic_launcher,
+                    "Approve", approvePendingIntent)
+                    .addRemoteInput(remoteInput)
+                    .build();
+    CharSequence cs = "string";
+    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "plugins.flutter.io/firebase_messaging_background")
+            .setContentTitle("Test")
+            .setContentText(cs)
+            // .setAutoCancel(true)
+            // .setContentIntent(approvePendingIntent)
+            .setLargeIcon(icon)
+            .setSmallIcon(R.drawable.ic_launcher)
+            .addAction(action);
+    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationChannel channel = new NotificationChannel("plugins.flutter.io/firebase_messaging_background",
+    "Channel human readable title",
+    NotificationManager.IMPORTANCE_DEFAULT);
+    notificationManager.createNotificationChannel(channel);
+    notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
   }
 
   /**

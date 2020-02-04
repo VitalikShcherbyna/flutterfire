@@ -11,5 +11,10 @@
       <meta-data android:name="com.google.firebase.components:io.flutter.plugins.firebasemessaging.FlutterFirebaseAppRegistrar"
                  android:value="com.google.firebase.components.ComponentRegistrar" />
     </service>
+    <receiver
+        android:name=".NotificationReceiver"
+        android:enabled="true"
+        android:exported="false">
+    </receiver>
   </application>
 </manifest>
