@@ -19,23 +19,24 @@ public class NotificationReceiver extends BroadcastReceiver {
     public static final int NOTIFICATION_ID = 200;
     @Override
     public void onReceive(Context context, Intent intent)  {
-        // FirebaseFirestore db = FirebaseFirestore.getInstance();
-        // Map<String, Object> city = new HashMap<>();
-        // city.put("action", "approved");
-        // db.collection("test").document("test")
-        // .set(city)
-        // .addOnSuccessListener(new OnSuccessListener<Void>() {
-        //     @Override
-        //     public void onSuccess(Void aVoid) {}
-        // })
-        // .addOnFailureListener(new OnFailureListener() {
-        //     @Override
-        //     public void onFailure(@NonNull Exception e) {}
-        // });
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-        .setSmallIcon(R.drawable.ic_launcher)
-        .setContentTitle("You have approved the Request");
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> city = new HashMap<>();
+        city.put("action", "approved");
+        db.collection("test").document("test")
+        .set(city)
+        .addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("You have approved the Request");
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {}
+        });
     }
 }
