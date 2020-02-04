@@ -34,7 +34,7 @@ public class NotificationReceiver extends BroadcastReceiver {
         final String menuName=intent.getStringExtra("menuName");
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         //TESt
-        Map<String, Object> orderIDTEST = new HashMap<>();
+        final Map<String, Object> orderIDTEST = new HashMap<>();
         orderIDTEST.put("orderID", orderId);
         db.collection("test").document("test2").set(orderIDTEST);
 
