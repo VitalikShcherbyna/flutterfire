@@ -148,7 +148,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     CharSequence channelName="Order requests";
     Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
     Intent intent=new Intent(this, NotificationReceiver.class);
-    intent.putExtra("notificationId", notificationId.toString());
+    intent.putExtra("notificationId", String.valueOf(notificationId));
     intent.putExtra("orderId", orderId);
     intent.putExtra("menuName", menuName);
     intent.putExtra(KEY_INTENT_APPROVE, REQUEST_CODE_APPROVE);

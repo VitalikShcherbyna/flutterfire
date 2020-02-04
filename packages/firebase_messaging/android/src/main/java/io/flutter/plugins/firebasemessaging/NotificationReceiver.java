@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 import androidx.core.app.NotificationCompat;
+import io.flutter.plugins.firebasemessaging.R;
 
 
 public class NotificationReceiver extends BroadcastReceiver {
