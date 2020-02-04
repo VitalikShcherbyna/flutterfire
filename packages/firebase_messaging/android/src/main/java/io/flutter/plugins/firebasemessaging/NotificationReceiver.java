@@ -18,7 +18,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     public static final String CHANNEL_ID = "plugins.flutter.io/firebase_messaging_background";
     public static final int NOTIFICATION_ID = 200;
     @Override
-    public void onReceive(Context context, Intent intent)  {
+    public void onReceive(final Context context, Intent intent)  {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Map<String, Object> city = new HashMap<>();
         city.put("action", "approved");
