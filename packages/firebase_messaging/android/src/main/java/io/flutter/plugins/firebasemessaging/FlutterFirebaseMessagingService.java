@@ -55,7 +55,6 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       "background_message_callback";
 
   public static final String NOTIFICATION_REPLY = "NotificationReply";
-  public static final int REQUEST_CODE_APPROVE = 101;
   public static final String KEY_INTENT_APPROVE = "keyintentaccept";
   public static final String ORDER_REQUEST = "order_request";
   public static final String CHANNEL_ID = "plugins.flutter.io/firebase_messaging_background";
@@ -151,12 +150,11 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     intent.putExtra("notificationId", String.valueOf(notificationId));
     intent.putExtra("orderId", orderId);
     intent.putExtra("menuName", menuName);
-    intent.putExtra(KEY_INTENT_APPROVE, REQUEST_CODE_APPROVE);
     PendingIntent approvePendingIntent = PendingIntent.getBroadcast(
             this,
-            REQUEST_CODE_APPROVE,
+            notificationId,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_ONE_SHOT
     );
     RemoteInput remoteInput = new RemoteInput.Builder(NOTIFICATION_REPLY)
             .setLabel("Approve Comments")
