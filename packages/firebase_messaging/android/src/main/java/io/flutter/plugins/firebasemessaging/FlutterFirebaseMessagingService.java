@@ -111,9 +111,9 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       // when the isolate starts.
       Map<String, String> data = remoteMessage.getData();
       String notificationType=data.get("notification_type");
-      if(notificationType == ORDER_REQUEST){
+      // if(notificationType == ORDER_REQUEST){
         showNotificationWithActions(remoteMessage);
-      }
+      // }
       else if (!isIsolateRunning.get()) {
         backgroundMessageQueue.add(remoteMessage);
       } else {
