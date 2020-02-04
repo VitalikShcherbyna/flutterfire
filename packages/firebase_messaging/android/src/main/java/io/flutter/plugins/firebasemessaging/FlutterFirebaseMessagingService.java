@@ -156,9 +156,13 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             intent,
             PendingIntent.FLAG_ONE_SHOT
     );
+    RemoteInput remoteInput = new RemoteInput.Builder(NOTIFICATION_REPLY)
+            .setLabel("Approve Comments")
+            .build();
     NotificationCompat.Action action =
             new NotificationCompat.Action.Builder(R.drawable.ic_launcher,
-                    "Akceptuj", approvePendingIntent)
+                    "Approve", approvePendingIntent)
+                    .addRemoteInput(remoteInput)
                     .build();
 
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
