@@ -112,10 +112,10 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       Map<String, String> data = remoteMessage.getData();
       String notificationType=data.get("notification_type");
 
-      if(ORDER_REQUEST==notificationType){
+      if(ORDER_REQUEST.equals(notificationType)){
         showNotificationWithActions(remoteMessage);
       }
-       if (!isIsolateRunning.get()) {
+      else if (!isIsolateRunning.get()) {
         backgroundMessageQueue.add(remoteMessage);
       } else {
         final CountDownLatch latch = new CountDownLatch(1);
