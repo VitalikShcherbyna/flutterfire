@@ -33,10 +33,6 @@ public class NotificationReceiver extends BroadcastReceiver {
         final String orderId=intent.getStringExtra("orderId");
         final String menuName=intent.getStringExtra("menuName");
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        //TESt
-        final Map<String, Object> orderIDTEST = new HashMap<>();
-        orderIDTEST.put("orderID", orderId);
-        db.collection("test").document("test2").set(orderIDTEST);
 
         db.collection("orders").document(orderId).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -44,14 +40,9 @@ public class NotificationReceiver extends BroadcastReceiver {
                     public void onSuccess(DocumentSnapshot orderDoc) {
                         WriteBatch batch = db.batch();
                         Map<String,Object> orderData=orderDoc.getData();
-                        //TEST
-                        db.collection("test").document("test").set(orderData);
 
                         Map<String,Object> orderDetails= (Map<String,Object>) orderData.get("order");
                         String orderStatus = (String) orderDetails.get("status");
-                        //TEST
-                        orderIDTEST.put("status", orderStatus);
-                        db.collection("test").document("test1").set(orderIDTEST);
 
                         if(PENDING.equals(orderStatus)){
                             batch.update(orderDoc.getReference(),new HashMap<String, Object>(){
@@ -63,13 +54,12 @@ public class NotificationReceiver extends BroadcastReceiver {
                             batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    showApprovedNotification(context,"Odłożono: "+ menuName,notificationId);
+                                    showApprovedNotification(context,"Odłożono: " + menuName,notificationId);
                                 }
                             });
-                        }
-                        else if(CANCELLED.equals(orderStatus)){
+                        } else if(CANCELLED.equals(orderStatus)){
                             showApprovedNotification(context, "Anulowane przez klienta: " + menuName, notificationId);
-                        }else if(REJECTED.equals(orderStatus)){
+                        } else if(REJECTED.equals(orderStatus)){
                             batch.update(orderDoc.getReference(),new HashMap<String, Object>(){
                                 {put("order.status", APPROVED);}
                             });
@@ -79,6 +69,8 @@ public class NotificationReceiver extends BroadcastReceiver {
                                     showApprovedNotification(context, "Odłożono: " + menuName, notificationId);
                                 }
                             });
+                        } else {
+                            showApprovedNotification(context, "Odłożono: " + menuName, notificationId);
                         }
                     }
                 });
