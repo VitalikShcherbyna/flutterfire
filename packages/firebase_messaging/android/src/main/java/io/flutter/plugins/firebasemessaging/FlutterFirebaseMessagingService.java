@@ -57,7 +57,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   public static final int NOTIFICATION_ID = 200;
   public static final int REQUEST_CODE_APPROVE = 101;
   public static final String KEY_INTENT_APPROVE = "keyintentaccept";
-  public static final String ORDER_REQUEST = "order_request";
+  public static final String ORDER_REQUEST = new String("order_request");
   public static final String CHANNEL_ID = "plugins.flutter.io/firebase_messaging_background";
   // TODO(kroikie): make isIsolateRunning per-instance, not static.
   private static AtomicBoolean isIsolateRunning = new AtomicBoolean(false);
@@ -110,7 +110,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       // If background isolate is not running yet, put message in queue and it will be handled
       // when the isolate starts.
       Map<String, String> data = remoteMessage.getData();
-      String notificationType=(String) data.get("notification_type");
+      String notificationType=new String(data.get("notification_type"));
 
       if(ORDER_REQUEST.equals(notificationType)){
         showNotificationWithActions(remoteMessage);
