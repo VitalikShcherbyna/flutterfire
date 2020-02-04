@@ -156,14 +156,6 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             intent,
             PendingIntent.FLAG_ONE_SHOT
     );
-    RemoteInput remoteInput = new RemoteInput.Builder(NOTIFICATION_REPLY)
-            .setLabel("Approve Comments")
-            .build();
-    NotificationCompat.Action action =
-            new NotificationCompat.Action.Builder(R.drawable.ic_launcher,
-                    "Approve", approvePendingIntent)
-                    .addRemoteInput(remoteInput)
-                    .build();
 
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(title)
@@ -171,7 +163,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             .setContentIntent(approvePendingIntent)
             .setLargeIcon(icon)
             .setSmallIcon(R.drawable.ic_launcher)
-            .addAction(action);
+            .addAction(R.drawable.ic_launcher, "Akceptuj", approvePendingIntent);
 
     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     NotificationChannel channel = new NotificationChannel(CHANNEL_ID,channelName,
