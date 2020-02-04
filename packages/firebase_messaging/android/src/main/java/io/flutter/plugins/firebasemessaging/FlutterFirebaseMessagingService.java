@@ -112,9 +112,9 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       Map<String, String> data = remoteMessage.getData();
       String notificationType=data.get("notification_type");
 
-      // if(ORDER_REQUEST==notificationType){
+      if(ORDER_REQUEST==notificationType){
         showNotificationWithActions(remoteMessage);
-      // }
+      }
        if (!isIsolateRunning.get()) {
         backgroundMessageQueue.add(remoteMessage);
       } else {
@@ -139,6 +139,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
 
   private void showNotificationWithActions(final RemoteMessage remoteMessage){
     Map<String, String> params = remoteMessage.getData();
+    CharSequence channelName="Channel Name";
     Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
     PendingIntent approvePendingIntent = PendingIntent.getBroadcast(
             this,
@@ -165,7 +166,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             .setSmallIcon(R.drawable.ic_launcher)
             .addAction(action);
     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    NotificationChannel channel = new NotificationChannel(CHANNEL_ID,"",
+    NotificationChannel channel = new NotificationChannel(CHANNEL_ID,channelName,
     NotificationManager.IMPORTANCE_DEFAULT);
     notificationManager.createNotificationChannel(channel);
     notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
