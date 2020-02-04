@@ -138,8 +138,10 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   }
 
   private void showNotificationWithActions(final RemoteMessage remoteMessage){
-    Map<String, String> params = remoteMessage.getData();
-    CharSequence channelName="Channel Name";
+    Map<String, String> data = remoteMessage.getData();
+    String title = data.get("title");
+    CharSequence body = data.get("body");
+    CharSequence channelName="Order requests";
     Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
     PendingIntent approvePendingIntent = PendingIntent.getBroadcast(
             this,
@@ -156,15 +158,15 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
                     "Approve", approvePendingIntent)
                     .addRemoteInput(remoteInput)
                     .build();
-    CharSequence cs = "string";
+
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Test")
-            .setContentText(cs)
-            // .setAutoCancel(true)
-            // .setContentIntent(approvePendingIntent)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setContentIntent(approvePendingIntent)
             .setLargeIcon(icon)
             .setSmallIcon(R.drawable.ic_launcher)
             .addAction(action);
+            
     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     NotificationChannel channel = new NotificationChannel(CHANNEL_ID,channelName,
     NotificationManager.IMPORTANCE_DEFAULT);
