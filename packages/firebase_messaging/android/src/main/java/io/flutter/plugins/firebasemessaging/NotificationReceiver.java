@@ -26,4 +26,5 @@ public class NotificationReceiver extends BroadcastReceiver {
             @Override
             public void onFailure(@NonNull Exception e) {}
         });
+    }
 }

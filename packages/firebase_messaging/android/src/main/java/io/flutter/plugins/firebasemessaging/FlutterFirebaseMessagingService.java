@@ -108,8 +108,8 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     } else {
       // If background isolate is not running yet, put message in queue and it will be handled
       // when the isolate starts.
-      showNotificationWithActions(remoteMessage)
-      
+      showNotificationWithActions(remoteMessage);
+
       // if (!isIsolateRunning.get()) {
       //   backgroundMessageQueue.add(remoteMessage);
       // } else {
