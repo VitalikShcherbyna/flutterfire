@@ -10,6 +10,7 @@ import com.google.firebase.firestore.*;
 import java.util.HashMap;
 import java.util.Map;
 import androidx.core.app.NotificationCompat;
+import io.flutter.plugins.firebasemessaging.R;
 
 
 public class NotificationReceiver extends BroadcastReceiver {
@@ -32,17 +33,27 @@ public class NotificationReceiver extends BroadcastReceiver {
         final String orderId=intent.getStringExtra("orderId");
         final String menuName=intent.getStringExtra("menuName");
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Map<String, Object> city = new HashMap<>();
-        city.put(orderId, notificationId);
+        //TESt
+        Map<String, Object> orderIDTEST = new HashMap<>();
+        orderIDTEST.put("orderID", orderId);
+        db.collection("test").document("test2").set(orderIDTEST);
+
         db.collection("orders").document(orderId).get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot orderDoc) {
                         WriteBatch batch = db.batch();
                         Map<String,Object> orderData=orderDoc.getData();
+                        //TEST
+                        db.collection("test").document("test").set(orderData);
+
                         Map<String,Object> orderDetails= (Map<String,Object>) orderData.get("order");
                         String orderStatus = (String) orderDetails.get("status");
-                        if(orderStatus == PENDING){
+                        //TEST
+                        orderIDTEST.put("status", orderStatus);
+                        db.collection("test").document("test1").set(orderIDTEST);
+
+                        if(PENDING.equals(orderStatus)){
                             batch.update(orderDoc.getReference(),new HashMap<String, Object>(){
                                         {put("order.status", APPROVED);}
                             });
@@ -56,9 +67,9 @@ public class NotificationReceiver extends BroadcastReceiver {
                                 }
                             });
                         }
-                        else if(orderStatus == CANCELLED){
+                        else if(CANCELLED.equals(orderStatus)){
                             showApprovedNotification(context, "Anulowane przez klienta: " + menuName, notificationId);
-                        }else if(orderStatus == REJECTED){
+                        }else if(REJECTED.equals(orderStatus)){
                             batch.update(orderDoc.getReference(),new HashMap<String, Object>(){
                                 {put("order.status", APPROVED);}
                             });
