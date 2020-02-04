@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import android.graphics.Bitmap;
@@ -54,7 +55,6 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       "background_message_callback";
 
   public static final String NOTIFICATION_REPLY = "NotificationReply";
-  public static final int NOTIFICATION_ID = 200;
   public static final int REQUEST_CODE_APPROVE = 101;
   public static final String KEY_INTENT_APPROVE = "keyintentaccept";
   public static final String ORDER_REQUEST = "order_request";
@@ -141,6 +141,8 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     Map<String, String> data = remoteMessage.getData();
     String title = data.get("title");
     CharSequence body = data.get("body");
+    Random rand = new Random();
+    int notificationID = rand.nextInt((100000 - 0) + 1) + 0;
     CharSequence channelName="Order requests";
     Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
     PendingIntent approvePendingIntent = PendingIntent.getBroadcast(
@@ -166,12 +168,12 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             .setLargeIcon(icon)
             .setSmallIcon(R.drawable.ic_launcher)
             .addAction(action);
-            
+
     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     NotificationChannel channel = new NotificationChannel(CHANNEL_ID,channelName,
     NotificationManager.IMPORTANCE_DEFAULT);
     notificationManager.createNotificationChannel(channel);
-    notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+    notificationManager.notify(notificationID, notificationBuilder.build());
   }
 
   /**

@@ -7,6 +7,7 @@ import android.content.Intent;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import androidx.annotation.NonNull;
+import java.util.Random;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,17 +27,19 @@ public class NotificationReceiver extends BroadcastReceiver {
         .set(city)
         .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(Void aVoid) {
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("You have approved the Request");
-                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-            }
+            public void onSuccess(Void aVoid) {}
         })
         .addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {}
+            public void onFailure(@NonNull Exception e) {
+                Random rand = new Random();
+                int notificationID = rand.nextInt((100000 - 0) + 1) + 0;
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentTitle("Błąd");
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.notify(notificationID, mBuilder.build());
+            }
         });
     }
 }
