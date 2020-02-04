@@ -39,11 +39,6 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import androidx.core.app.NotificationCompat;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import androidx.annotation.NonNull;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
 
   public static final String ACTION_REMOTE_MESSAGE =
@@ -116,20 +111,8 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
       // when the isolate starts.
       Map<String, String> data = remoteMessage.getData();
       String notificationType=(String) data.get("notification_type");
-      FirebaseFirestore db = FirebaseFirestore.getInstance();
-      Map<String, Object> city = new HashMap<>();
-      city.put("notificationType", notificationType);
-      db.collection("test").document("test")
-      .set(city)
-      .addOnSuccessListener(new OnSuccessListener<Void>() {
-          @Override
-          public void onSuccess(Void aVoid) {}
-      })
-      .addOnFailureListener(new OnFailureListener() {
-          @Override
-          public void onFailure(@NonNull Exception e) {}
-      });
-      if(notificationType == ORDER_REQUEST){
+
+      if(ORDER_REQUEST.equals(notificationType)){
         showNotificationWithActions(remoteMessage);
       }
       else if (!isIsolateRunning.get()) {
