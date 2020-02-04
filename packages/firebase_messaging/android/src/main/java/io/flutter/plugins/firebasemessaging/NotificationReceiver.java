@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package io.flutter.plugins.firebasemessaging;
 
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
