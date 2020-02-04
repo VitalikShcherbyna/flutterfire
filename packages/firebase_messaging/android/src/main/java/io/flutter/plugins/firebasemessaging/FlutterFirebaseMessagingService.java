@@ -141,15 +141,21 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     Map<String, String> data = remoteMessage.getData();
     String title = data.get("title");
     CharSequence body = data.get("body");
+    String orderId = data.get("orderId"); 
+    String menuName = data.get("menuName"); 
     Random rand = new Random();
-    int notificationID = rand.nextInt((100000 - 0) + 1) + 0;
+    int notificationId = rand.nextInt((10000000 - 0) + 1) + 0;
     CharSequence channelName="Order requests";
     Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+    Intent intent=new Intent(this, NotificationReceiver.class);
+    intent.putExtra("notificationId", notificationId.toString());
+    intent.putExtra("orderId", orderId);
+    intent.putExtra("menuName", menuName);
+    intent.putExtra(KEY_INTENT_APPROVE, REQUEST_CODE_APPROVE);
     PendingIntent approvePendingIntent = PendingIntent.getBroadcast(
             this,
             REQUEST_CODE_APPROVE,
-            new Intent(this, NotificationReceiver.class)
-                    .putExtra(KEY_INTENT_APPROVE, REQUEST_CODE_APPROVE),
+            intent,
             PendingIntent.FLAG_UPDATE_CURRENT
     );
     RemoteInput remoteInput = new RemoteInput.Builder(NOTIFICATION_REPLY)
@@ -173,7 +179,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     NotificationChannel channel = new NotificationChannel(CHANNEL_ID,channelName,
     NotificationManager.IMPORTANCE_DEFAULT);
     notificationManager.createNotificationChannel(channel);
-    notificationManager.notify(notificationID, notificationBuilder.build());
+    notificationManager.notify(notificationId, notificationBuilder.build());
   }
 
   /**
