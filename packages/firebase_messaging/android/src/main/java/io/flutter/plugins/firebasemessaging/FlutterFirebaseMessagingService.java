@@ -163,7 +163,8 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             .setContentIntent(approvePendingIntent)
             .setLargeIcon(icon)
             .setSmallIcon(R.drawable.ic_launcher)
-            .addAction(R.drawable.ic_launcher, "Akceptuj", approvePendingIntent);
+            .addAction(R.drawable.ic_launcher, "Akceptuj", approvePendingIntent)
+            .addAction(R.drawable.ic_launcher, "Odrzuć", approvePendingIntent);
 
     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     NotificationChannel channel = new NotificationChannel(CHANNEL_ID,channelName,
