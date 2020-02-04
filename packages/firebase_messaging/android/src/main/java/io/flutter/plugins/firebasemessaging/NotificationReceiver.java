@@ -32,6 +32,6 @@ public class NotificationReceiver extends BroadcastReceiver {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, FlutterFirebaseMessagingService.CHANNEL_ID)
         .setContentTitle("You have approved the Request");
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(MainActivity.NOTIFICATION_ID, mBuilder.build());
+            notificationManager.notify(FlutterFirebaseMessagingService.NOTIFICATION_ID, mBuilder.build());
     }
 }
