@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
+import androidx.core.app.NotificationCompat;
 
 
 public class NotificationReceiver extends BroadcastReceiver {
@@ -28,5 +29,9 @@ public class NotificationReceiver extends BroadcastReceiver {
             @Override
             public void onFailure(@NonNull Exception e) {}
         });
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, FlutterFirebaseMessagingService.CHANNEL_ID)
+        .setContentTitle("You have approved the Request");
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(MainActivity.NOTIFICATION_ID, mBuilder.build());
     }
 }

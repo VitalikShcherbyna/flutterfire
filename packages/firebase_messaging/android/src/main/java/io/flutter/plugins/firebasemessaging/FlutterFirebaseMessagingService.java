@@ -57,7 +57,8 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   public static final int NOTIFICATION_ID = 200;
   public static final int REQUEST_CODE_APPROVE = 101;
   public static final String KEY_INTENT_APPROVE = "keyintentaccept";
-
+  public static final String ORDER_REQUEST = "order_request";
+  public static final String CHANNEL_ID = "plugins.flutter.io/firebase_messaging_background";
   // TODO(kroikie): make isIsolateRunning per-instance, not static.
   private static AtomicBoolean isIsolateRunning = new AtomicBoolean(false);
 
@@ -108,27 +109,30 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     } else {
       // If background isolate is not running yet, put message in queue and it will be handled
       // when the isolate starts.
-      showNotificationWithActions(remoteMessage);
-
-      // if (!isIsolateRunning.get()) {
-      //   backgroundMessageQueue.add(remoteMessage);
-      // } else {
-      //   final CountDownLatch latch = new CountDownLatch(1);
-      //   new Handler(getMainLooper())
-      //       .post(
-      //           new Runnable() {
-      //             @Override
-      //             public void run() {
-      //               executeDartCallbackInBackgroundIsolate(
-      //                   FlutterFirebaseMessagingService.this, remoteMessage, latch);
-      //             }
-      //           });
-      //   try {
-      //     latch.await();
-      //   } catch (InterruptedException ex) {
-      //     Log.i(TAG, "Exception waiting to execute Dart callback", ex);
-      //   }
-      // }
+      Map<String, String> data = remoteMessage.getData();
+      String notificationType=data.get('notification_type');
+      if(notificationType == ORDER_REQUEST){
+        showNotificationWithActions(remoteMessage);
+      }
+      else if (!isIsolateRunning.get()) {
+        backgroundMessageQueue.add(remoteMessage);
+      } else {
+        final CountDownLatch latch = new CountDownLatch(1);
+        new Handler(getMainLooper())
+            .post(
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    executeDartCallbackInBackgroundIsolate(
+                        FlutterFirebaseMessagingService.this, remoteMessage, latch);
+                  }
+                });
+        try {
+          latch.await();
+        } catch (InterruptedException ex) {
+          Log.i(TAG, "Exception waiting to execute Dart callback", ex);
+        }
+      }
     }
   }
 
@@ -151,7 +155,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
                     .addRemoteInput(remoteInput)
                     .build();
     CharSequence cs = "string";
-    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "plugins.flutter.io/firebase_messaging_background")
+    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Test")
             .setContentText(cs)
             // .setAutoCancel(true)
@@ -160,8 +164,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             .setSmallIcon(R.drawable.ic_launcher)
             .addAction(action);
     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-    NotificationChannel channel = new NotificationChannel("plugins.flutter.io/firebase_messaging_background",
-    "Channel human readable title",
+    NotificationChannel channel = new NotificationChannel(CHANNEL_ID,"",
     NotificationManager.IMPORTANCE_DEFAULT);
     notificationManager.createNotificationChannel(channel);
     notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
