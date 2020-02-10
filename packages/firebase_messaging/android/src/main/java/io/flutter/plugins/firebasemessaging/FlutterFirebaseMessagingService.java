@@ -141,7 +141,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     String title = data.get("title");
     CharSequence body = data.get("body");
     String orderId = data.get("orderId"); 
-    String menuName = data.get("menuName"); 
+    String supplierRef = data.get("supplierRef"); 
     Random rand = new Random();
     int notificationId = rand.nextInt((10000000 - 0) + 1) + 0;
     CharSequence channelName="Order requests";
@@ -149,28 +149,15 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     Intent intent=new Intent(this, NotificationReceiver.class);
     intent.putExtra("notificationId", String.valueOf(notificationId));
     intent.putExtra("orderId", orderId);
-    intent.putExtra("menuName", menuName);
     PendingIntent approvePendingIntent = PendingIntent.getBroadcast(
             this,
             notificationId,
             intent,
             PendingIntent.FLAG_ONE_SHOT
     );
-    //Import Main Activity
-    // Class mainActivity = null;
-    // Context context = getApplicationContext();
-    // String  packageName = context.getPackageName();
-    // Intent  launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-    // String  className = launchIntent.getComponent().getClassName();
-
-    // try {
-    //     //loading the Main Activity to not import it in the plugin
-    //     mainActivity = Class.forName(className);
-    // } catch (Exception e) {
-    //     e.printStackTrace();
-    // }
+    //Open MainActivity
     Intent contentIntent = new Intent(this, ContentNotificationReceiver.class);
-
+    intent.putExtra("supplierRef", supplierRef);
     PendingIntent pendingIntentContent = PendingIntent.getBroadcast(
             this,
             notificationId,
