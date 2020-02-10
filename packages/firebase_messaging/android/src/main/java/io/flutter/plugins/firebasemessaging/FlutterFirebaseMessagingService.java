@@ -156,7 +156,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             intent,
             PendingIntent.FLAG_ONE_SHOT
     );
-    //TEST
+    //Import Main Activity
     Class mainActivity = null;
     Context context = getApplicationContext();
     String  packageName = context.getPackageName();
@@ -170,7 +170,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
         e.printStackTrace();
     }
     Intent contentIntent = new Intent(context, mainActivity);
-    //TEST
+
     PendingIntent pendingIntentContent = PendingIntent.getActivity(
             this,
             notificationId,
