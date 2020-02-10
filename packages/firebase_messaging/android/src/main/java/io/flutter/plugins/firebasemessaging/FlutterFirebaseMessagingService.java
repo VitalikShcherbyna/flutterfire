@@ -157,7 +157,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             PendingIntent.FLAG_ONE_SHOT
     );
     //TEST
-    Class mainActivity;
+    Class mainActivity = null;
     Context context = getApplicationContext();
     String  packageName = context.getPackageName();
     Intent  launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
