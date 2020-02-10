@@ -156,8 +156,21 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             intent,
             PendingIntent.FLAG_ONE_SHOT
     );
-    Intent contentIntent = new Intent(this,MainActivity.class);
-    contentIntent.putExtra(EXTRA_REMOTE_MESSAGE, remoteMessage);
+    //TEST
+    Class mainActivity;
+    Context context = getApplicationContext();
+    String  packageName = context.getPackageName();
+    Intent  launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+    String  className = launchIntent.getComponent().getClassName();
+
+    try {
+        //loading the Main Activity to not import it in the plugin
+        mainActivity = Class.forName(className);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    Intent contentIntent = new Intent(context, mainActivity);
+    //TEST
     PendingIntent pendingIntentContent = PendingIntent.getActivity(
             this,
             notificationId,
