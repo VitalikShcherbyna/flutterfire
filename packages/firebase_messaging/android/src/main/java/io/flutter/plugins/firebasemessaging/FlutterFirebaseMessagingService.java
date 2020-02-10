@@ -171,7 +171,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     // } catch (Exception e) {
     //     e.printStackTrace();
     // }
-    Intent contentIntent = new Intent(CUSTOM_MESSAGE);
+    Intent contentIntent = new Intent(this, FirebaseMessagingPlugin.class);
 
     PendingIntent pendingIntentContent = PendingIntent.getBroadcast(
             this,
