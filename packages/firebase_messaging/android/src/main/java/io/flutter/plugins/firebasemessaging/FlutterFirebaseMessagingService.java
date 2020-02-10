@@ -146,13 +146,24 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     int notificationId = rand.nextInt((10000000 - 0) + 1) + 0;
     CharSequence channelName="Order requests";
     Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
-    Intent intent=new Intent(this, NotificationReceiver.class);
-    intent.putExtra("notificationId", String.valueOf(notificationId));
-    intent.putExtra("orderId", orderId);
+    //APPROVED
+    Intent approvedIntent=new Intent(this, AcceptNotificationReceiver.class);
+    approvedIntent.putExtra("notificationId", String.valueOf(notificationId));
+    approvedIntent.putExtra("orderId", orderId);
     PendingIntent approvePendingIntent = PendingIntent.getBroadcast(
             this,
             notificationId,
-            intent,
+            approvedIntent,
+            PendingIntent.FLAG_ONE_SHOT
+    );
+    //REJECTED
+    Intent rejectedIntent=new Intent(this, RejectNotificationReceiver.class);
+    rejectedIntent.putExtra("notificationId", String.valueOf(notificationId));
+    rejectedIntent.putExtra("orderId", orderId);
+    PendingIntent rejectedPendingIntent = PendingIntent.getBroadcast(
+            this,
+            notificationId,
+            rejectedIntent,
             PendingIntent.FLAG_ONE_SHOT
     );
     //Open MainActivity
@@ -173,7 +184,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_launcher)
             .addAction(R.drawable.ic_launcher, "Akceptuj", approvePendingIntent)
-            .addAction(R.drawable.ic_launcher, "Odrzuć", approvePendingIntent);
+            .addAction(R.drawable.ic_launcher, "Odrzuć", rejectedPendingIntent);
 
     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     NotificationChannel channel = new NotificationChannel(CHANNEL_ID,channelName,

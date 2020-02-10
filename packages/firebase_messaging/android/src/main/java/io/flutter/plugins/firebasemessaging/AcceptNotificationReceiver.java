@@ -16,7 +16,7 @@ import androidx.core.app.NotificationCompat;
 import com.google.firebase.functions.FirebaseFunctions;
 import io.flutter.plugins.firebasemessaging.R;
 
-public class NotificationReceiver extends BroadcastReceiver {
+public class AcceptNotificationReceiver extends BroadcastReceiver {
     static public String PENDING = "pending";
     static public String APPROVED = "approved";
     static public String REJECTED = "rejected";

@@ -12,7 +12,7 @@
                  android:value="com.google.firebase.components.ComponentRegistrar" />
     </service>
     <receiver
-        android:name=".NotificationReceiver"
+        android:name=".AcceptNotificationReceiver"
         android:enabled="true"
         android:exported="false">
     </receiver>
