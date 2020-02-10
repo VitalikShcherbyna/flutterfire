@@ -45,7 +45,6 @@ public class NotificationReceiver extends BroadcastReceiver {
 
                 Map<String, Object> orderDetails = (Map<String, Object>) orderData.get("order");
                 DocumentReference route = (DocumentReference) orderData.get("route");
-                // FIX GETPATH ONLY AFTER /
                 final String userRef = ((DocumentReference) orderData.get("user")).getPath().split("/")[1];
                 String orderStatus = (String) orderDetails.get("status");
                 final String menuNameEN = (String) orderDetails.get("menuNameEN");
