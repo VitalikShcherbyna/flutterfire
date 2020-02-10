@@ -24,7 +24,7 @@ public class ContentNotificationReceiver extends BroadcastReceiver {
         channel = ch;
     }
 
-    private boolean sendMessageFromIntent(Intent intent) {
+    private void sendMessageFromIntent(Intent intent) {
         final String supplierRef = intent.getStringExtra("supplierRef");
         Map<String, Object> message = new HashMap<>();
 
