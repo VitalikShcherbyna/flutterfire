@@ -256,10 +256,10 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   @Override
   public boolean onNewIntent(Intent intent) {
     // boolean res = sendMessageFromIntent("onResume", intent);
-    if (res && registrar.activity() != null) {
+    // if (res && registrar.activity() != null) {
       registrar.activity().setIntent(intent);
-    }
-    return res;
+    // }
+    return true;
   }
 
   /** @return true if intent contained a message to send. */
