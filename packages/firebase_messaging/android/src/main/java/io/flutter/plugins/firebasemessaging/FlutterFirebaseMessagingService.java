@@ -158,11 +158,17 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     );
     Intent contentIntent = new Intent(ACTION_REMOTE_MESSAGE);
     contentIntent.putExtra(EXTRA_REMOTE_MESSAGE, remoteMessage);
+    PendingIntent pendingIntentContent = PendingIntent.getBroadcast(
+            this,
+            notificationId,
+            contentIntent,
+            PendingIntent.FLAG_ONE_SHOT
+    );
 
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(body)
-            .setContentIntent(contentIntent)
+            .setContentIntent(pendingIntentContent)
             .setLargeIcon(icon)
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_launcher)
