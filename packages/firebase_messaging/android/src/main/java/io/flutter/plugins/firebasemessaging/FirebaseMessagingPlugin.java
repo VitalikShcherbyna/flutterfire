@@ -68,7 +68,7 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
   @Override
   public void onReceive(Context context, Intent intent) {
     String action = intent.getAction();
-
+    registrar.activity().setIntent(intent);
     if (action == null) {
       return;
     }
@@ -255,11 +255,11 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
 
   @Override
   public boolean onNewIntent(Intent intent) {
-    // boolean res = sendMessageFromIntent("onResume", intent);
-    // if (res && registrar.activity() != null) {
+    boolean res = sendMessageFromIntent("onResume", intent);
+    if (res && registrar.activity() != null) {
       registrar.activity().setIntent(intent);
-    // }
-    return true;
+    }
+    return res;
   }
 
   /** @return true if intent contained a message to send. */
