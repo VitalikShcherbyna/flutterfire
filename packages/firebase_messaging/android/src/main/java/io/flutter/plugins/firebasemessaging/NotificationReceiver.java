@@ -112,6 +112,5 @@ public class NotificationReceiver extends BroadcastReceiver {
                 showApprovedNotification(context, "Operacja nie powiodła się", notificationId);
             }
         });
-        ;
     }
 }

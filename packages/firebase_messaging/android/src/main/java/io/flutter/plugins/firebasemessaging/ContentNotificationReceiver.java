@@ -13,6 +13,7 @@ import com.google.firebase.firestore.*;
 import java.util.HashMap;
 import java.util.Map;
 import androidx.core.app.NotificationCompat;
+import io.flutter.plugin.common.MethodChannel;
 import com.google.firebase.functions.FirebaseFunctions;
 import io.flutter.plugins.firebasemessaging.R;
 
