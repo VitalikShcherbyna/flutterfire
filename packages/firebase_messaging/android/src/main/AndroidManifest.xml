@@ -17,6 +17,11 @@
         android:exported="false">
     </receiver>
     <receiver
+        android:name=".RejectNotificationReceiver"
+        android:enabled="true"
+        android:exported="false">
+    </receiver>
+    <receiver
         android:name=".ContentNotificationReceiver"
         android:enabled="true"
         android:exported="false">
