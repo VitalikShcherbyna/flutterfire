@@ -157,7 +157,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     );
     //Open MainActivity
     Intent contentIntent = new Intent(this, ContentNotificationReceiver.class);
-    intent.putExtra("supplierRef", supplierRef);
+    contentIntent.putExtra("supplierRef", supplierRef);
     PendingIntent pendingIntentContent = PendingIntent.getBroadcast(
             this,
             notificationId,
