@@ -24,7 +24,7 @@ public class ContentNotificationReceiver extends BroadcastReceiver {
         channel = ch;
     }
 
-    private void sendMessageFromIntent(Intent intent) {
+    private boolean sendMessageFromIntent(Intent intent) {
         final String supplierRef = intent.getStringExtra("supplierRef");
         Map<String, Object> message = new HashMap<>();
 
@@ -36,6 +36,7 @@ public class ContentNotificationReceiver extends BroadcastReceiver {
         message.put("data", dataMap);
     
         channel.invokeMethod("onResume", message);
+        return true;
     }
 
     @Override
@@ -44,10 +45,12 @@ public class ContentNotificationReceiver extends BroadcastReceiver {
         Intent  launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
         String  className = launchIntent.getComponent().getClassName();
         
-        Intent i = new Intent();
-        i.setClassName(packageName, className);
-        sendMessageFromIntent(intent);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(i);
+        boolean onResume = sendMessageFromIntent(intent);
+        if(onResume){
+            Intent i = new Intent();
+            i.setClassName(packageName, className);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
+        }
     }
 }
