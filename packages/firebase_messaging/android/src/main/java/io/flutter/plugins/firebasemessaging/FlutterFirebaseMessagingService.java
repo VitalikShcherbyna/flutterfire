@@ -168,7 +168,6 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(body)
-            .setContentIntent(pendingIntentContent)
             .setLargeIcon(icon)
             .setAutoCancel(true)
             .setSmallIcon(R.drawable.ic_launcher)
