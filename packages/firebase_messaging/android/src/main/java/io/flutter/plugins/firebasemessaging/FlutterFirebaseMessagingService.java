@@ -44,6 +44,8 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
 
   public static final String ACTION_REMOTE_MESSAGE =
       "io.flutter.plugins.firebasemessaging.NOTIFICATION";
+  public static final String CUSTOM_MESSAGE =
+      "io.flutter.plugins.firebasemessaging.CUSTOM_MESSAGE";
   public static final String EXTRA_REMOTE_MESSAGE = "notification";
 
   public static final String ACTION_TOKEN = "io.flutter.plugins.firebasemessaging.TOKEN";
@@ -169,7 +171,7 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     // } catch (Exception e) {
     //     e.printStackTrace();
     // }
-    Intent contentIntent = new Intent(this, FirebaseMessagingPlugin.class);
+    Intent contentIntent = new Intent(CUSTOM_MESSAGE);
 
     PendingIntent pendingIntentContent = PendingIntent.getBroadcast(
             this,
