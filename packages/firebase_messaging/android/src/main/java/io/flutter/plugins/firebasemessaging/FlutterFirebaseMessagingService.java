@@ -44,8 +44,6 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
 
   public static final String ACTION_REMOTE_MESSAGE =
       "io.flutter.plugins.firebasemessaging.NOTIFICATION";
-  public static final String CUSTOM_MESSAGE =
-      "io.flutter.plugins.firebasemessaging.CUSTOM_MESSAGE";
   public static final String EXTRA_REMOTE_MESSAGE = "notification";
 
   public static final String ACTION_TOKEN = "io.flutter.plugins.firebasemessaging.TOKEN";
@@ -159,21 +157,21 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
             PendingIntent.FLAG_ONE_SHOT
     );
     //Import Main Activity
-    // Class mainActivity = null;
-    // Context context = getApplicationContext();
-    // String  packageName = context.getPackageName();
-    // Intent  launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
-    // String  className = launchIntent.getComponent().getClassName();
+    Class mainActivity = null;
+    Context context = getApplicationContext();
+    String  packageName = context.getPackageName();
+    Intent  launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+    String  className = launchIntent.getComponent().getClassName();
 
-    // try {
-    //     //loading the Main Activity to not import it in the plugin
-    //     mainActivity = Class.forName(className);
-    // } catch (Exception e) {
-    //     e.printStackTrace();
-    // }
-    Intent contentIntent = new Intent(this, FirebaseMessagingPlugin.class);
+    try {
+        //loading the Main Activity to not import it in the plugin
+        mainActivity = Class.forName(className);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    Intent contentIntent = new Intent(this, mainActivity);
 
-    PendingIntent pendingIntentContent = PendingIntent.getBroadcast(
+    PendingIntent pendingIntentContent = PendingIntent.getActivity(
             this,
             notificationId,
             contentIntent,
