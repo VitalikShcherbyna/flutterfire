@@ -50,6 +50,7 @@ public class FirebaseMessagingPlugin extends BroadcastReceiver
     backgroundCallbackChannel.setMethodCallHandler(plugin);
 
     FlutterFirebaseMessagingService.setBackgroundChannel(backgroundCallbackChannel);
+    ContentNotificationReceiver.setChannel(channel);
   }
 
   private FirebaseMessagingPlugin(Registrar registrar, MethodChannel channel) {
