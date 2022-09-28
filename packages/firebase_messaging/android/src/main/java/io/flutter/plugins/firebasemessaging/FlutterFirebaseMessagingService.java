@@ -27,8 +27,18 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import android.graphics.Bitmap;
+import android.app.NotificationManager;
+import android.app.NotificationChannel;
+import android.app.PendingIntent;
+import androidx.core.app.RemoteInput;
+import io.flutter.plugins.firebasemessaging.R;
+import android.content.Context;
+import android.graphics.BitmapFactory;
+import androidx.core.app.NotificationCompat;
 
 public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -44,6 +54,10 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
   private static final String BACKGROUND_MESSAGE_CALLBACK_HANDLE_KEY =
       "background_message_callback";
 
+  public static final String NOTIFICATION_REPLY = "NotificationReply";
+  public static final String KEY_INTENT_APPROVE = "keyintentaccept";
+  public static final String ORDER_REQUEST = "order_request";
+  public static final String CHANNEL_ID = "plugins.flutter.io/firebase_messaging_background";
   // TODO(kroikie): make isIsolateRunning per-instance, not static.
   private static AtomicBoolean isIsolateRunning = new AtomicBoolean(false);
 
@@ -94,7 +108,13 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
     } else {
       // If background isolate is not running yet, put message in queue and it will be handled
       // when the isolate starts.
-      if (!isIsolateRunning.get()) {
+      Map<String, String> data = remoteMessage.getData();
+      String notificationType=data.get("notification_type");
+
+      if(ORDER_REQUEST.equals(notificationType)){
+        showNotificationWithActions(remoteMessage);
+      }
+      else if (!isIsolateRunning.get()) {
         backgroundMessageQueue.add(remoteMessage);
       } else {
         final CountDownLatch latch = new CountDownLatch(1);
@@ -114,6 +134,63 @@ public class FlutterFirebaseMessagingService extends FirebaseMessagingService {
         }
       }
     }
+  }
+
+  private void showNotificationWithActions(final RemoteMessage remoteMessage){
+    Map<String, String> data = remoteMessage.getData();
+    String title = data.get("title");
+    CharSequence body = data.get("body");
+    String orderId = data.get("orderId"); 
+    String supplierRef = data.get("supplierRef"); 
+    Random rand = new Random();
+    int notificationId = rand.nextInt((10000000 - 0) + 1) + 0;
+    CharSequence channelName="Order requests";
+    Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher);
+    //APPROVED
+    Intent approvedIntent=new Intent(this, AcceptNotificationReceiver.class);
+    approvedIntent.putExtra("notificationId", String.valueOf(notificationId));
+    approvedIntent.putExtra("orderId", orderId);
+    PendingIntent approvePendingIntent = PendingIntent.getBroadcast(
+            this,
+            notificationId,
+            approvedIntent,
+            PendingIntent.FLAG_ONE_SHOT
+    );
+    //REJECTED
+    Intent rejectedIntent=new Intent(this, RejectNotificationReceiver.class);
+    rejectedIntent.putExtra("notificationId", String.valueOf(notificationId));
+    rejectedIntent.putExtra("orderId", orderId);
+    PendingIntent rejectedPendingIntent = PendingIntent.getBroadcast(
+            this,
+            notificationId,
+            rejectedIntent,
+            PendingIntent.FLAG_ONE_SHOT
+    );
+    //Open MainActivity
+    Intent contentIntent = new Intent(this, ContentNotificationReceiver.class);
+    contentIntent.putExtra("supplierRef", supplierRef);
+    PendingIntent pendingIntentContent = PendingIntent.getBroadcast(
+            this,
+            notificationId,
+            contentIntent,
+            PendingIntent.FLAG_ONE_SHOT
+    );
+
+    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(title)
+            .setContentText(body)
+            .setContentIntent(pendingIntentContent)
+            .setLargeIcon(icon)
+            .setAutoCancel(true)
+            .setSmallIcon(R.drawable.ic_launcher)
+            .addAction(R.drawable.ic_launcher, "Akceptuj", approvePendingIntent)
+            .addAction(R.drawable.ic_launcher, "Odrzuć", rejectedPendingIntent);
+
+    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationChannel channel = new NotificationChannel(CHANNEL_ID,channelName,
+    NotificationManager.IMPORTANCE_DEFAULT);
+    notificationManager.createNotificationChannel(channel);
+    notificationManager.notify(notificationId, notificationBuilder.build());
   }
 
   /**
